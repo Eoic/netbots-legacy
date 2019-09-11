@@ -8,7 +8,7 @@ const uuidv4 = require('uuid/v4');
 const cookieParser = require('cookie-parser')
 const useRoutes = require('./routes/routes');
 const morgan = require('morgan');
-const config = require('./config');
+const config = require('../config');
 const { connect } = require('./models/Index');
 connect(process.env.MONGO_URI || config.mongoURI);
 const port = process.env.PORT || config.devPort;
