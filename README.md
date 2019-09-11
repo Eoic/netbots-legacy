@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/Eoic/netbots.svg?style=svg&circle-token=00241a178411177fbd19a453a58680be0aab2449)](https://circleci.com/gh/Eoic/netbots)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ef89c5dc37fa4749924f05a9e9c0c9ca)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Eoic/netbots&amp;utm_campaign=Badge_Grade)
 # NETBOTS - multiplayer robot programming game
 
 ## Installing
