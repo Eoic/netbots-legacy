@@ -1,0 +1,45 @@
+{{>loading}}
+{{>modal}}
+
+<div id='messages-container'></div>
+
+{{>game-info-sidebar}}
+
+<div id='game-map'></div>
+<div id='splitter'>
+    <button id='script-tab' class="btn btn-primary btn-primary-selected unselectable" onclick="hideConsole()" title="Code">
+        <span class="fa fa-code"></span> CODE
+    </button>
+    <button id='console-tab' class="btn btn-primary unselectable" onclick="showConsole()" title="Output">
+        <span class="fa fa-file-alt"></span> OUTPUT
+    </button>
+    <hr style="border: 0" />
+    <label for='scripts-dropdown' class='label-light unselectable'> Simulate against </label>
+    <select id='scripts-dropdown' class='dropdown'></select>
+    <button class="btn btn-primary unselectable" onclick="runScript('SIMULATION')" title="Run">
+        <span class='fa fa-play'></span> RUN
+    </button>
+    <button class="btn btn-primary unselectable" onclick="saveScript()" title="Save">
+        <span class="fa fa-save"></span> SAVE
+    </button>
+    <button class="btn btn-primary unselectable" onclick="openModal(isScriptSelected()); setDeletionMessage()" title="Delete">
+        <span class="fa fa-trash"></span> DELETE
+    </button>
+</div>
+<div id='editor'>
+    <div style="height: 100px"></div>
+</div>
+
+<script src='/static/js/ui/modal-toggle.js'></script>
+<script src='/static/js/ui/notifier.js'></script>
+<script src='/static/js/editor/src-min/ace.js'></script>
+<script src='/static/js/pixijs/pixi.min.js'></script>
+
+<!-- Filters -->
+<script src='/static/js/pixijs/filters/drop-shadow-filter/filter-drop-shadow.js'></script>
+<script src='/static/js/pixijs/filters/glow-filter/filter-glow.js'></script>
+<script src='/static/js/pixijs/filters/kawase-blur-filter/filter-kawase-blur.js'></script>
+
+<script src='/static/js/game/main.js'></script>
+<script src='/static/js/editor/editor.js'></script>
+<script src='/static/js/editor/console-window.js'></script>

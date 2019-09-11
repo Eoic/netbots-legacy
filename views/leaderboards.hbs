@@ -1,0 +1,27 @@
+<section class="section-full-size">
+    <h2 class="section-header padded-header"> LEADERBOARD </h2>
+    <hr/>
+    <table>
+        <thead>
+            <tr>
+                <th> Position </th>
+                <th> Level </th>
+                <th> Username </th>
+                <th> Win / loss rate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each users}}
+            <tr>
+                <td> {{increment @index}} </td>
+                <td> {{level}} </td>
+                <td> {{username}} </td>
+                <td style="text-align: center">
+                    <progress {{#if (isNotZero gamesPlayed)}} max="{{gamesPlayed}}" {{/if}}  value="{{gamesWon}}"> </progress>
+                    ({{winRate}} %)
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</section>
