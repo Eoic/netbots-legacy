@@ -27,10 +27,6 @@ const handleSessionParser = (router: Router) => {
   router.use(getSessionInstance());
 };
 
-const handleTemplateEngine = (router: Router) => {
-  
-};
-
 const handleStaticPath = (router: Router) => {
   router.use(staticPath(path.resolve(__dirname, "../public")));
 };
@@ -41,6 +37,5 @@ export default [
   handleCors,
   handleCompression,
   handleSessionParser,
-  handleTemplateEngine,
   handleStaticPath,
 ];
