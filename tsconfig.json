@@ -16,6 +16,7 @@
         "allowSyntheticDefaultImports": true,
         "incremental": true,
         "strict": true,
+        "allowJs": true,
         "sourceMap": true,
         "baseUrl": ".",
         "outDir": "./out",
