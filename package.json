@@ -4,8 +4,8 @@
   "description": "NetBots is a robot programming game",
   "main": "server.js",
   "scripts": {
-    "start": "node out/server.js",
-    "dev": "rm -rf out/ && npm run scss-build-dev && tsc-watch -p tsconfig.json --onSuccess \"concurrently -p \"[{name}]\" -n \"LINT,SCSS,SERVER\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold\" --kill-others \"npm:lint\" \"npm:scss-watch\" \"npm:start\"\"",
+    "start": "node dist/main.js",
+    "dev": "rm -rf out/ && npm run scss-build-dev && tsc-watch -p tsconfig.json --onSuccess \"concurrently -p \"[{name}]\" -n \"LINT,SCSS,SERVER\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold\" --kill-others \"npm:lint\" \"npm:scss-watch\" \"node out/server.js\"\"",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "scss-watch": "node-sass src/public/scss -o out/public/css --watch --source-map true",
     "scss-build": "node-sass src/public/scss -o dist/public/css --output-style compressed",
@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@sendgrid/mail": "^6.4.0",
+    "@types/express": "^4.17.1",
     "@types/mongoose": "^5.5.17",
     "concurrently": "^4.1.2",
     "node-sass": "^4.12.0",

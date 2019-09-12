@@ -17,3 +17,23 @@ Step 5: Copy and rename `.example.env` file to `.env` and edit its configuration
 Step 5: Start project with `npm start`
 
 Step 6: Open project in the browser: [http://localhost:3000](http://localhost:3000)
+
+## NPM scripts
+
+`start` - starts production server
+
+`dev` - starts watching SCSS and TypeScript files and launches development server
+
+`lint` - lint TypeScript source files
+
+`scss-watch` - watch SCSS files and transpile to CSS in `out` directory for development
+
+`scss-build` - transpile SCSS to CSS to `dist` directory
+
+`scss-build-dev` - transpile SCSS to CSS to `out` directory once
+
+`ts-watch` - watch TypeScript source files and output JavaScript to `out` directory
+
+`ts-build` - transpile TypeScript source files to `dist` directory
+
+`build` - build project
