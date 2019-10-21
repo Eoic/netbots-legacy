@@ -1,10 +1,8 @@
-import { routeVerifier } from './helpers/routeVerifier';
-import { Request, Response } from 'express';
-import { logger } from '../logger';
+import { Request, Response } from "express";
+import { logger } from "../../logger";
+import { routeVerifier } from "./helpers/routeVerifier";
 
 const logout = [{
-  method: 'get',
-  path: '/logout',
   handler: [
     routeVerifier.allowAuthorizedOnly,
     async (req: Request, res: Response) => {
@@ -13,14 +11,16 @@ const logout = [{
           if (err) {
             logger.error(err);
           } else {
-            res.clearCookie(process.env.SESSION_NAME || 'sid');
+            res.clearCookie(process.env.SESSION_NAME || "sid");
           }
-          res.redirect('/');
+          res.redirect("/");
         });
       } else {
         res.sendStatus(401);
       }
     }],
+  method: "get",
+  path: "/logout",
 }];
 
 export { logout };

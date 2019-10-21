@@ -1,8 +1,10 @@
+import mongoose from "mongoose";
 import { createConnection } from "typeorm";
 import { Script } from "./models/models/Script";
 import { Statistics } from "./models/models/Statistics";
 import { User } from "./models/models/User";
 
+/*
 export const connection = createConnection({
   database: process.env.DB_NAME,
   entities: [User, Script, Statistics],
@@ -13,3 +15,7 @@ export const connection = createConnection({
   type: "mysql",
   username: process.env.DB_USER,
 });
+
+*/
+
+export const mongoConnect = mongoose.connect(process.env.MONGO_URI as string, { useNewUrlParser: true });

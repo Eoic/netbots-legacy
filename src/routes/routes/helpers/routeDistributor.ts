@@ -1,8 +1,8 @@
-import { index } from '../index';
-import { login } from '../login';
-import { register } from '../register';
-import { stub } from '../stub';
-import { logout } from '../logout';
+import { index } from "../index";
+import { login } from "../login";
+import { logout } from "../logout";
+import { register } from "../register";
+import { stub } from "../stub";
 
 const routes = [
   ...index,

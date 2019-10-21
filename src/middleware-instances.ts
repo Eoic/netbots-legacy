@@ -11,6 +11,7 @@ const createStore = (sessionInstance: SessionType) => {
     return new redisStore({ client: redisClient });
   }
 
+  console.log("Creating development session store.");
   return new MemoryStore();
 };
 

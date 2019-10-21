@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from "express";
 
 const routeVerifier = {
   isAuthorized: (req: Request, res: Response) => {
@@ -9,11 +9,12 @@ const routeVerifier = {
     }
     return false;
   },
+  // tslint:disable-next-line: object-literal-sort-keys
   allowAuthorizedOnly: async (req: Request, res: Response, next: NextFunction) => {
-    return (routeVerifier.isAuthorized(req, res)) ? next() : res.redirect('/');
+    return (routeVerifier.isAuthorized(req, res)) ? next() : res.redirect("/");
   },
   allowUnauthorizedOnly: async (req: Request, res: Response, next: NextFunction) => {
-    return (routeVerifier.isAuthorized(req, res)) ? res.redirect('/') : next();
+    return (routeVerifier.isAuthorized(req, res)) ? res.redirect("/") : next();
   },
 };
 

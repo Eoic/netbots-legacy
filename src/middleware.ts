@@ -24,6 +24,7 @@ const handleCompression = (router: Router) => {
 };
 
 const handleSessionParser = (router: Router) => {
+  console.log("Setting session store...");
   router.use(getSessionInstance());
 };
 
@@ -32,10 +33,10 @@ const handleStaticPath = (router: Router) => {
 };
 
 export default [
-  handleCookieParser,
   handleBodyParser,
   handleCors,
   handleCompression,
   handleSessionParser,
   handleStaticPath,
+  handleCookieParser,
 ];

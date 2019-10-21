@@ -1,25 +1,25 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity('statistics')
+@Entity("statistics")
 export class Statistics extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id!: number;
+  public id!: number;
 
   @Column({ default: 1 })
-  level!: number;
+  public level!: number;
 
   @Column({ default: 0 })
-  experience!: number;
+  public experience!: number;
 
   @Column({ default: 0 })
-  gamesPlayed!: number;
+  public gamesPlayed!: number;
 
   @Column({ default: 0 })
-  gamesWon!: number;
+  public gamesWon!: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt!: Date;
+  @CreateDateColumn({ type: "timestamp" })
+  public createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt!: Date;
+  @UpdateDateColumn({ type: "timestamp" })
+  public updatedAt!: Date;
 }

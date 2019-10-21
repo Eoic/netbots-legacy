@@ -60,5 +60,5 @@ export const useTemplateEngine = (appInstance: Application) => {
   });
 
   appInstance.engine("hbs", hbs.engine as any);
-  appInstance.set("view engine", "handlebars");
+  appInstance.set("view engine", "hbs");
 };

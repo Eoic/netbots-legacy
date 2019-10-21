@@ -1,30 +1,28 @@
-import { Request, Response } from 'express';
-import { routeVerifier } from './helpers/routeVerifier';
-import { validationResult, body } from 'express-validator';
-import { validatorMessages } from '../validation/validatorMessages';
-import { validatorBounds } from '../validation/validatorBounds';
-import { getConnection } from 'typeorm';
-import { User } from '../models/User';
-import { fillInstance } from '../database/helpers';
-import bcryptjs from 'bcryptjs';
-import { logger } from '../logger';
+import bcryptjs from "bcryptjs";
+import { Request, Response } from "express";
+import { body, validationResult } from "express-validator";
+import { getConnection } from "typeorm";
+import { fillInstance } from "../../database/helpers";
+import { logger } from "../../logger";
+import { User } from "../../models/models/User";
+import { validatorBounds } from "../../validation/validatorBounds";
+import { validatorMessages } from "../../validation/validatorMessages";
+import { routeVerifier } from "./helpers/routeVerifier";
 
 const register = [
   {
-    path: '/register',
-    method: 'get',
     handler: [
       routeVerifier.allowUnauthorizedOnly,
       async (req: Request, res: Response) => {
-        res.render('register.njk', { title: 'Register' });
+        res.render("register.njk", { title: "Register" });
       },
     ],
+    method: "get",
+    path: "/register",
   },
   {
-    path: '/register',
-    method: 'post',
     validator: [
-      body('username')
+      body("username")
         .trim()
         .not()
         .isEmpty()
@@ -37,23 +35,27 @@ const register = [
         .customSanitizer((username) => {
           return username.toLowerCase();
         }),
-      body('email')
+      body("email")
         .not()
         .isEmpty()
         .withMessage(validatorMessages.EMAIL_EMPTY)
         .isEmail()
         .withMessage(validatorMessages.NOT_AN_EMAIL)
         .normalizeEmail(),
-      body('password')
+      body("password")
         .isLength(validatorBounds.PASSWORD)
         .withMessage(validatorMessages.PASSWORD_LENGTH_INVALID),
     ],
+    // tslint:disable-next-line: object-literal-sort-keys
     handler: [
       routeVerifier.allowUnauthorizedOnly,
       async (req: Request, res: Response) => {
-        if (validationResult(req)['errors'].length > 0) {
-          type ErrorKeys = { msg: string; param: string };
-          const errors = validationResult(req)['errors'].map((error: ErrorKeys) => ({
+        // tslint:disable-next-line: no-string-literal
+        if (validationResult(req)["errors"].length > 0) {
+          // tslint:disable-next-line: interface-name
+          interface ErrorKeys { msg: string; param: string; }
+          // tslint:disable-next-line: no-string-literal
+          const errors = validationResult(req)["errors"].map((error: ErrorKeys) => ({
             msg: error.msg,
             param: error.param,
           }));
@@ -98,6 +100,8 @@ const register = [
         });
       },
     ],
+    method: "post",
+    path: "/register",
   }];
 
 export { register };

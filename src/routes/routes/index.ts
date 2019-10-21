@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
 const index = [{
-  path: '/',
-  method: 'get',
   handler: async (req: Request, res: Response) => {
-    res.render('index.njk', { title: 'Home' });
+    res.render("index.njk", { title: "Home" });
   },
+  method: "get",
+  path: "/",
 }];
 
 export { index };

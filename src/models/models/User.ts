@@ -1,41 +1,41 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { validatorBounds } from '../validation/validatorBounds';
-import { Script } from './Script';
-import { Statistics } from './Statistics';
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { validatorBounds } from "../../validation/validatorBounds";
+import { Script } from "./Script";
+import { Statistics } from "./Statistics";
 
-@Entity('users')
+@Entity("users")
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id!: number;
+  public id!: number;
 
   @Column({ length: validatorBounds.USERNAME.max })
-  username!: string;
+  public username!: string;
 
   @Column({ length: validatorBounds.PASSWORD.max })
-  password!: string;
+  public password!: string;
 
   @Column()
-  email!: string;
+  public email!: string;
 
   @Column({ default: false })
-  isAdmin!: boolean;
+  public isAdmin!: boolean;
 
   @Column()
-  multiplayerScript!: number;
+  public multiplayerScript!: number;
 
   @Column({ default: false })
-  multiplayerVisible!: boolean;
+  public multiplayerVisible!: boolean;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt!: Date;
+  @CreateDateColumn({ type: "timestamp" })
+  public createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt!: Date;
+  @UpdateDateColumn({ type: "timestamp" })
+  public updatedAt!: Date;
 
-  @OneToMany(type => Script, script => script.user)
-  scripts!: Script[];
+  @OneToMany((type) => Script, (script) => script.user)
+  public scripts!: Script[];
 
-  @OneToOne(type => Statistics)
+  @OneToOne((type) => Statistics)
   @JoinColumn()
-  statistics!: Statistics;
+  public statistics!: Statistics;
 }

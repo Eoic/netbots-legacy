@@ -53,11 +53,12 @@ config();
 
 import http from "http";
 import ws from "ws";
-import { connection } from "./database";
+import { /*connection, */ mongoConnect } from "./database";
 import { logger } from "./logger";
 import middleware from "./middleware";
+import { useRoutes } from "./routes/routes";
 import { routes } from "./routes/routes/helpers/routeDistributor";
-import { useMiddleware, useRoutes, useSocketApi, useTemplateEngine } from "./utilities";
+import { useMiddleware, /*, useRoutes, useSocketApi, */ useTemplateEngine } from "./utilities";
 
 // Create http and web socket servers
 const port = process.env.PORT || 5000;
@@ -66,12 +67,12 @@ const httpServer = http.createServer(router);
 const socketServer = new ws.Server({ noServer: true });
 
 // Bootstrapping
-connection.then(() => {
+mongoConnect.then(() => {
   logger.info("Connection to DB successful");
   useMiddleware(middleware, router);
-  useTemplateEngine(app);
-  useRoutes(routes, router);
-  useSocketApi(httpServer, socketServer);
+  useTemplateEngine(router);
+  useRoutes(router);
+  // useSocketApi(httpServer, socketServer);
 }).catch((err) => {
   logger.error(err);
 });

@@ -1,21 +1,21 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { validatorBounds } from '../validation/validatorBounds';
-import { User } from './User';
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { validatorBounds } from "../../validation/validatorBounds";
+import { User } from "./User";
 
-@Entity('scripts')
+@Entity("scripts")
 export class Script extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id!: number;
+  public id!: number;
 
   @Column({ length: validatorBounds.SCRIPT_FILENAME })
-  filename!: string;
+  public filename!: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt!: Date;
+  @CreateDateColumn({ type: "timestamp" })
+  public createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt!: Date;
+  @UpdateDateColumn({ type: "timestamp" })
+  public updatedAt!: Date;
 
-  @ManyToOne(type => User, user => user.scripts)
-  user!: User;
+  @ManyToOne((type) => User, (user) => user.scripts)
+  public user!: User;
 }
