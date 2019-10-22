@@ -7,7 +7,7 @@ import { getSessionInstance } from "./middleware-instances";
 
 // Dispatches created rooms to subscribers.
 const roomPublisher = redis.createClient({
-  url: "redis://h:p48991d57fba05b9748e09cd3869e57384be450bee6e77f64696bd64a655e9deb@ec2-52-214-198-105.eu-west-1.compute.amazonaws.com:32339",
+  url: String(process.env.REDIS_URL),
 });
 
 const socketApi = {
