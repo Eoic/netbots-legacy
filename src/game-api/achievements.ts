@@ -1,23 +1,32 @@
 import { Achievement } from "../models/Achievement";
 import { User } from "../models/User";
 
+interface IRule {
+    condition: number;
+    key: string;
+    type: number;
+    value: number;
+}
+
+let RuleSet: IRule[];
+
 const RULE_CONDITIONS = {
-    EQUAL: 4,
-    GREATER_OR_EQUAL_THAN: 3,
-    GREATER_THAN: 2,
-    LESS_OR_EQUAL_THAN: 1,
     LESS_THAN: 0,
+    LESS_OR_EQUAL_THAN: 1,
+    GREATER_THAN: 2,
+    GREATER_OR_EQUAL_THAN: 3,
+    EQUAL: 4,
 };
 
 const ACHIEVEMENT_TYPE = {
-    DAMAGE: 2,
-    PLAY: 1,
     WIN: 0,
+    PLAY: 1,
+    DAMAGE: 2,
 };
 
 Object.freeze(RULE_CONDITIONS);
 
-const RuleSet = [{
+RuleSet = [{
     condition: RULE_CONDITIONS.EQUAL,
     key: "ACH_WIN_ONE_GAME",
     type: ACHIEVEMENT_TYPE.WIN,
@@ -55,10 +64,9 @@ const RuleSet = [{
 }];
 
 class AchievementUnlocker {
-    private ruleSet: [];
 
-    constructor(ruleSet: []) {
-        this.ruleSet = ruleSet;
+    constructor(private ruleSet: IRule[]) {
+        // this.ruleSet = ruleSet;
     }
 
     /**

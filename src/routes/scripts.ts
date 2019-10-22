@@ -28,13 +28,7 @@ router.get("/", privateRoute, (req, res) => {
 /**
  * Get script by objectId
  */
-router.get("/:id", privateRoute, (req, res, next) => {
-    if ((req as any).session.user && req.cookies.connect_sid) {
-        next();
-    } else {
-        res.redirect("/");
-    }
-}, (req, res) => {
+router.get("/:id", privateRoute, (req, res) => {
 
     if (typeof (req as any).session.user.username === "undefined") {
         return res.sendStatus(403);
@@ -173,11 +167,7 @@ router.post("/select-mp-script", privateRoute, (req, res) => {
 });
 
 /** RUN CODE ROUTE (SIMULATION) */
-router.post("/run-code", privateRoute, (req, res, next) => {
-    if ((req as any).session.user && req.cookies.connect_sid) {
-        next();
-    } else { res.redirect("/"); }
-}, (req, res) => {
+router.post("/run-code", privateRoute, (req, res) => {
     const enemyScript = req.body.enemy;
 
     // Fetch code from db

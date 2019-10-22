@@ -404,7 +404,7 @@ function nextRound(gameState: any) {
  * Calls game loop and calculates
  * time between frames
  */
-const loop = () => {
+export const loop = () => {
     setTimeout(loop, tickLength);
     const now = time();
     const delta = (now - previous) / 1000;
@@ -470,88 +470,76 @@ function createGameObjects(scripts: any, playerKeys: any, ws: any, gameType: any
  * Client connection event handler
  * @param { Object } ws Web socket object
  */
-const wsServerCallback = (ws: any, req: any, store: any) => {
+export const wsServerCallback = (ws: any, req: any) => {
     const cookieObject = cookie.parse(req.headers.cookie);
-    const sessionId = cookieObject.connect_sid.slice(2, 38);
+    const sessionId = cookieObject[String(process.env.SESSION_NAME)].slice(2, 38);
+    const sessionData = req.session;
 
-    store.get(sessionId, (err: any, sessionData: any) => {
+    ws.id = uuidv4();
 
-        // User autenticated
-        if (!err) {
-            ws.id = uuidv4();
+    ws.on("message", (data: any) => {
 
-            ws.on("message", (data: any) => {
+        const payload = JSON.parse(data);
 
-                const payload = JSON.parse(data);
+        switch (payload.type) {
+            case "SIMULATION":
+                createGameObjects([payload.playerCode, payload.enemyCode], playerKeys, ws, GAME_TYPE.SIMULATION);
+                break;
+            case "MULTIPLAYER":
+                if (typeof sessionData.user.multiplayer !== "undefined") {
 
-                switch (payload.type) {
-                    case "SIMULATION":
-                        createGameObjects([payload.playerCode, payload.enemyCode], playerKeys, ws, GAME_TYPE.SIMULATION);
-                        break;
-                    case "MULTIPLAYER":
-                        if (typeof sessionData.user.multiplayer !== "undefined") {
+                    GameSession.findOne({
+                        createdBy: sessionData.user.username,
+                        sessionId: sessionData.user.multiplayer.sessionId,
+                    }).then((session) => {
+                        createGameObjects([(session as any).data[0].code, (session as any).data[1].code],
+                            playerKeys, ws, GAME_TYPE.MULTIPLAYER,
+                            [(session as any).data[0].username, (session as any).data[1].username],
+                            (session as any).sessionId);
 
-                            GameSession.findOne({
-                                createdBy: sessionData.user.username,
-                                sessionId: sessionData.user.multiplayer.sessionId,
-                            }).then((session) => {
-                                createGameObjects([(session as any).data[0].code, (session as any).data[1].code],
-                                    playerKeys, ws, GAME_TYPE.MULTIPLAYER,
-                                    [(session as any).data[0].username, (session as any).data[1].username],
-                                    (session as any).sessionId);
-
-                                ws.send(JSON.stringify({
-                                    type: "PLAYER_NAMES",
-                                    // tslint:disable-next-line: object-literal-sort-keys
-                                    names: {
-                                        playerOne: (session as any).data[0].username,
-                                        playerTwo: (session as any).data[1].username,
-                                    },
-                                }));
-                            // tslint:disable-next-line: no-shadowed-variable
-                            }).catch((err) => {
-                                console.log(err);
-                            });
-                        }
-                        break;
-                    default:
-                        return 0;
+                        ws.send(JSON.stringify({
+                            type: "PLAYER_NAMES",
+                            // tslint:disable-next-line: object-literal-sort-keys
+                            names: {
+                                playerOne: (session as any).data[0].username,
+                                playerTwo: (session as any).data[1].username,
+                            },
+                        }));
+                        // tslint:disable-next-line: no-shadowed-variable
+                    }).catch((err) => {
+                        console.log(err);
+                    });
                 }
-            });
-
-            // Delete player connection from gameStates array
-            ws.on("close", () => {
-                if ((gameStates as any)[ws.id] !== undefined) {
-                    if ((gameStates as any)[ws.id].gameType === GAME_TYPE.MULTIPLAYER) {
-
-                        // User left mid-game.
-                        // Remove session data and count game as played
-                        GameSession.findOneAndRemove({
-                            createdBy: sessionData.user.username,
-                            sessionId: sessionData.user.multiplayer.sessionId,
-                        }).then(() => {
-                            User.findOneAndUpdate({
-                                username: sessionData.user.username,
-                            }, { $inc: { "statistic.gamesPlayed": 1 } }).then((user) => {
-                                if (user !== null) {
-                                    updateUserAchievements(user._id);
-                                }
-                            });
-
-                            Reflect.deleteProperty(gameStates, ws.id);
-                        });
-                    }
-                } else {
-                    Reflect.deleteProperty(gameStates, ws.id);
-                }
-            });
-        } else {
-            console.log(err);
+                break;
+            default:
+                return 0;
         }
     });
-};
 
-module.exports = {
-    loop,
-    wsServerCallback,
+    // Delete player connection from gameStates array
+    ws.on("close", () => {
+        if ((gameStates as any)[ws.id] !== undefined) {
+            if ((gameStates as any)[ws.id].gameType === GAME_TYPE.MULTIPLAYER) {
+
+                // User left mid-game.
+                // Remove session data and count game as played
+                GameSession.findOneAndRemove({
+                    createdBy: sessionData.user.username,
+                    sessionId: sessionData.user.multiplayer.sessionId,
+                }).then(() => {
+                    User.findOneAndUpdate({
+                        username: sessionData.user.username,
+                    }, { $inc: { "statistic.gamesPlayed": 1 } }).then((user) => {
+                        if (user !== null) {
+                            updateUserAchievements(user._id);
+                        }
+                    });
+
+                    Reflect.deleteProperty(gameStates, ws.id);
+                });
+            }
+        } else {
+            Reflect.deleteProperty(gameStates, ws.id);
+        }
+    });
 };

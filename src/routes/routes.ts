@@ -27,16 +27,14 @@ sitemap({
 */
 
 export const useRoutes = (app: any) => {
-    // Clear cookies from browser if user is not set
-    // Sets response locals
     app.use((req: any, res: any, next: any) => {
-        console.log(req.cookies);
+        // Clear cookies if user is not set.
         if (req.cookies[String(process.env.SESSION_NAME)] && !req.session.user) {
             res.clearCookie(String(process.env.SESSION_NAME));
         }
 
+        // Set locals if session exists.
         if (req.session.user && req.cookies[String(process.env.SESSION_NAME)]) {
-            console.log("Setting locals");
             res.locals.authenticated = true;
             res.locals.user = {
                 identiconHash: req.session.user.identiconHash,
@@ -47,6 +45,7 @@ export const useRoutes = (app: any) => {
 
         next();
     });
+
     app.use(index);
     app.use(seo);
     app.use("/login", login);

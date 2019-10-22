@@ -7,7 +7,6 @@ import { privateRoute } from "./privateRoute";
 const SALT_ROUNDS = 10;
 
 router.get("/", privateRoute, (req: any, res: any, next: any) => {
-    console.log("hello");
     User.findOne({
         username: req.session.user.username,
     }).select({

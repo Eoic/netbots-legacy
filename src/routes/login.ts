@@ -1,18 +1,12 @@
 import express, { Request } from "express";
 const router = express.Router();
 import { User } from "./../models/User";
+import { publicRoute } from "./publicRoute";
 
-router.get("/", (req: any, res: any, next: any) => {
-    if (!req.session.user || !req.cookies.connect_sid) {
-        next();
-    } else { res.redirect("/"); }
-}, (req: any, res: any) => {
+router.get("/", publicRoute, (req: any, res: any) => {
     res.render("login", {
         title: "Login",
-        // tslint:disable-next-line: object-literal-sort-keys
-        active: {
-            login: true,
-        },
+        active: { login: true },
     });
 });
 
@@ -29,7 +23,9 @@ router.post("/", (req, res) => {
                         isAdmin: (user as any).isAdmin,
                         username: (user as any).username,
                     };
-                    res.redirect("/profile");
+
+                    res.locals.authenticated = true;
+                    res.redirect("/");
                 } else {
                     handleErrors(res, ["Please check your username or password"]);
                 }

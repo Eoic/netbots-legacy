@@ -5,11 +5,13 @@ import { SessionType } from "./types";
 
 // Creates session store according to environment
 const createStore = (sessionInstance: SessionType) => {
+  /*
   if (process.env.NODE_ENV === "production") {
     const redisStore = connectRedis(sessionInstance);
     const redisClient = redis.createClient();
     return new redisStore({ client: redisClient });
   }
+  */
 
   console.log("Creating development session store.");
   return new MemoryStore();
@@ -17,14 +19,14 @@ const createStore = (sessionInstance: SessionType) => {
 
 const session = expressSession({
   cookie: {
-    maxAge: 1209600000,
-    sameSite: true,
+    maxAge: Number(process.env.COOKIE_AGE),
+    sameSite: false,
     secure: (process.env.NODE_ENV === "production"),
   },
   name: process.env.SESSION_NAME,
   resave: false,
   saveUninitialized: false,
-  secret: process.env.SESSION_SECRET || "",
+  secret: String(process.env.SESSION_SECRET),
   store: createStore(expressSession),
 });
 

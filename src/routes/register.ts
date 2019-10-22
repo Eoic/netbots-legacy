@@ -44,7 +44,8 @@ router.post("/", validateRegistration, (req: any, res: any) => {
             isAdmin: newUser.isAdmin,
             username: newUser.username,
         };
-        res.redirect("/profile");
+
+        return res.redirect("/profile");
     }).catch((err: any) => {
         res.status(422).json({ err });
     });
