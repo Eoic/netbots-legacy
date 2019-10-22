@@ -15,7 +15,7 @@
     "ts-build": "rm -rf dist/ && tsc --outDir dist/ --sourceMap false --incremental false",
     "build": "npm run lint && npm run ts-build && npm run scss-build",
     "test": "nyc mocha --require ts-node/register --require source-map-support/register --recursive ./src/test/**/*.spec.ts",
-    "coverage": "nyc report --reporter=lcovonly"
+    "coverage": "nyc report --reporter=lcovonly && codecov"
   },
   "repository": {
     "type": "git",
