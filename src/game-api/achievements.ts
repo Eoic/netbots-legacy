@@ -66,7 +66,7 @@ RuleSet = [{
 class AchievementUnlocker {
 
     constructor(private ruleSet: IRule[]) {
-        // this.ruleSet = ruleSet;
+        this.ruleSet = ruleSet;
     }
 
     /**
@@ -149,10 +149,14 @@ function filterAchievements(user: any, achievementType: any, statisticsValue: an
     return unlockedList;
 }
 
+// Calculates collected experience points from given list of unlocked achievements
 function calculateUnlockedExp(unlockedList: any, callback: any) {
     let unlockedExp = 0;
     const keys: any = [];
-    unlockedList.forEach((achievement: any) => keys.push(achievement.key));
+
+    unlockedList.forEach((achievement: any) => {
+        keys.push(achievement.key);
+    });
 
     Achievement.find({
         key: { $in: keys },

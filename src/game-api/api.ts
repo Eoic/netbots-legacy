@@ -9,10 +9,7 @@ const MESSAGE_TYPE = {
 };
 
 class Vector {
-    private x: number;
-    private y: number;
-
-    constructor(x: number, y: number) {
+    constructor(public x: number, public y: number) {
         this.x = x;
         this.y = y;
     }
@@ -22,13 +19,18 @@ class Vector {
     }
 
     public normalize() {
-        const x = this.x / Math.sqrt(this.dot(this));
-        const y = this.y / Math.sqrt(this.dot(this));
+        const dotProduct = this.dot(this);
+        const x = this.x / Math.sqrt(dotProduct);
+        const y = this.y / Math.sqrt(dotProduct);
         return new Vector(x, y);
     }
 
     public subtract(vector: Vector) {
         return new Vector(this.x - vector.x, this.y - vector.y);
+    }
+
+    public toString() {
+        return `(${this.x}, ${this.y})`;
     }
 }
 
@@ -499,6 +501,7 @@ const utilities = {
         if (!player.scanEnabled) {
             return;
         }
+
         const turretDirection = new Vector(Math.cos(player.turretRotation + player.rotation), Math.sin(player.turretRotation + player.rotation));
         const targetPosition = new Vector(enemy.x, enemy.y);
         const turretDirectionNormalized = turretDirection.normalize();

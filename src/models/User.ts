@@ -72,7 +72,7 @@ const UserSchema = new Schema({
  * Hash password before saving to DB
  */
 UserSchema.pre("save", function(next) {
-    const user = this as any; // !
+    const user = this as any;
     console.log("Called pre-save.");
     return bcrypt.hash(user.password, SALT_ROUNDS).then((hash) => {
         user.password = hash;
