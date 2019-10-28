@@ -200,12 +200,17 @@ class Player {
 
     // Called on each round.
     public resetBulletPool() {
+        this.cooldownTicks = 0;
         this.bulletPool.forEach((bullet: IBullet) => {
             bullet.x = 0;
             bullet.y = 0;
             bullet.rotation = 0;
             bullet.isAlive = false;
         });
+    }
+
+    public getCurrentBulletPoolSize() {
+        return this.bulletPool.filter((bullet) => bullet.isAlive === false).length;
     }
 
     public updateBulletPositions(delta: number, onBulletMissCallback: any) {

@@ -33,6 +33,10 @@ describe("AchievementUnlocker", () => {
             assert.strictEqual(achievementUnlocker.unlock("ACH_WIN_FIFTY_GAMES", 50), true);
         });
 
+        it("should return false with ACH_PLAY_FIFTY_GAMES rule key and value of 0", () => {
+            assert.strictEqual(achievementUnlocker.unlock("ACH_WIN_FIFTY_GAMES", 0), false);
+        });
+
         it("should return true with ACH_NO_GAME_DAMAGE rule key and value of 0", () => {
             assert.strictEqual(achievementUnlocker.unlock("ACH_NO_GAME_DAMAGE", 0), true);
         });
