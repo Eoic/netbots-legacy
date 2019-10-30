@@ -1,5 +1,5 @@
 import assert from "assert";
-import { AchievementUnlocker, RULE_CONDITIONS, RuleSet, updateUserAchievements, filterAchievements, calculateUnlockedExp } from "../game-api/achievements";
+import { AchievementUnlocker, calculateUnlockedExp, filterAchievements, RULE_CONDITIONS, RuleSet, updateUserAchievements } from "../game-api/achievements";
 
 const achievementUnlocker = new AchievementUnlocker(RuleSet);
 
@@ -42,6 +42,7 @@ describe("AchievementUnlocker", () => {
             filterAchievements("userKey", 1, 1, undefined);
             // tslint:disable-next-line: no-empty
             calculateUnlockedExp([], () => {});
+            updateUserAchievements("");
         });
     });
 
