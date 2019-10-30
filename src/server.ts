@@ -20,7 +20,7 @@ const httpServer = http.createServer(router);
 const socketServer = new ws.Server({ noServer: true });
 
 // Bootstrapping
-mongoConnect.then(() => {
+mongoConnect(process.env.MONGO_URI as string).then(() => {
   logger.info("Connection to DB successful");
   useMiddleware(middleware, router);
   useTemplateEngine(router);

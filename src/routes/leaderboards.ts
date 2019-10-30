@@ -5,7 +5,6 @@ import { User } from "../models/User";
 router.get("/", (request, response) => {
     User.find().select({
         "username": 1,
-        // tslint:disable-next-line: object-literal-sort-keys
         "statistic.gamesWon": 1,
         "statistic.gamesPlayed": 1,
         "statistic.experience": 1,
@@ -15,7 +14,6 @@ router.get("/", (request, response) => {
         } else {
             response.render("leaderboards", {
                 title: "NETBOTS | Leaderboard",
-                // tslint:disable-next-line: object-literal-sort-keys
                 active: {
                     leaderboards: true,
                 },

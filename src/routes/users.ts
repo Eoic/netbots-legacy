@@ -19,7 +19,6 @@ router.get("/manage-users", privateRoute, (req, res) => {
             res.render("manageUsers", {
                 title: "Manage users",
                 users: result,
-                // tslint:disable-next-line: object-literal-sort-keys
                 active: {
                     users: true,
                 },

@@ -35,10 +35,10 @@ class Vector {
 }
 
 class GameTracker {
-    private damageDone: number;
-    private roundsWon: number;
-    private shotsFired: number;
-    private enemiesEliminated: number;
+    public damageDone: number;
+    public roundsWon: number;
+    public shotsFired: number;
+    public enemiesEliminated: number;
 
     constructor() {
         this.damageDone = 0;
@@ -64,6 +64,13 @@ class GameTracker {
         this.shotsFired++;
     }
 
+    public reset() {
+        this.damageDone = 0;
+        this.roundsWon = 0;
+        this.shotsFired = 0;
+        this.enemiesEliminated = 0;
+    }
+
     /**
      * Update number of times enemy was depleted
      * to 0 HP per multiplayer match
@@ -77,11 +84,12 @@ class GameTracker {
             damageDone: this.damageDone,
             roundsWon: this.roundsWon,
             shotsFired: this.shotsFired,
+            enemiesEliminated: this.enemiesEliminated,
         };
     }
 }
 
-interface IBullet {
+export interface IBullet {
     x: number;
     y: number;
     rotation: number;
@@ -89,25 +97,25 @@ interface IBullet {
 }
 
 class Player {
-    private x: number;
-    private y: number;
+    public playerName: string;
+    public x: number;
+    public y: number;
+    public enemyVisible: boolean;
+    public rotation: number;
+    public turretRotation: number;
     private startPosX: number;
     private startPosY: number;
     private startRotation: number;
     private health: number;
     private energy: number;
-    private rotation: number;
-    private turretRotation: number;
     private enemyDistance: number;
     private bulletPool: IBullet[];
     private messages: [];
     private targetPosX: number;
     private targetPosY: number;
     private tracker: GameTracker;
-    private playerName: string;
     private cooldownTicks: number;
     private targetPositionReached: boolean;
-    private enemyVisible: boolean;
 
     constructor(x: number, y: number, rotation: number, tracker: GameTracker, playerName: string) {
         this.startPosX = x;
@@ -135,7 +143,13 @@ class Player {
     public refreshEnergy() {
         if (this.energy + CONSTANTS.ENERGY_REFRESH_STEP <= CONSTANTS.EN_FULL) {
             this.energy += CONSTANTS.ENERGY_REFRESH_STEP;
+        } else {
+            this.energy = CONSTANTS.EN_FULL;
         }
+    }
+
+    public getTracker() {
+        return this.tracker;
     }
 
     public resetVitals() {
@@ -187,7 +201,18 @@ class Player {
         this.targetPosY = y;
     }
 
+    public getTargetPosition() {
+        return {
+            x: this.targetPosX,
+            y: this.targetPosY,
+        };
+    }
+
     public initBulletPool() {
+        if (this.bulletPool.length > 0) {
+            this.bulletPool = [];
+        }
+
         for (let i = 0; i < CONSTANTS.BULLET_POOL_SIZE; i++) {
             this.bulletPool.push({
                 isAlive: false,
@@ -213,8 +238,12 @@ class Player {
         return this.bulletPool.filter((bullet) => bullet.isAlive === false).length;
     }
 
+    public getActiveBullets() {
+        return this.bulletPool.filter((bullet: IBullet) => bullet.isAlive === true);
+    }
+
     public updateBulletPositions(delta: number, onBulletMissCallback: any) {
-        this.bulletPool.filter((bullet: IBullet) => bullet.isAlive === true).forEach((bullet: IBullet) => {
+        this.getActiveBullets().forEach((bullet: IBullet) => {
             if (bullet.x > CONSTANTS.MAP_WIDTH + CONSTANTS.VISIBLE_MAP_OFFSET ||
                 bullet.x < -CONSTANTS.VISIBLE_MAP_OFFSET || bullet.y < -CONSTANTS.VISIBLE_MAP_OFFSET ||
                 bullet.y > CONSTANTS.MAP_HEIGHT + CONSTANTS.VISIBLE_MAP_OFFSET) {
@@ -255,7 +284,6 @@ class Player {
                 this.energy -= CONSTANTS.BULLET_COST;
                 return true;
             } else if (i === CONSTANTS.BULLET_POOL_SIZE - 1) {
-                console.log("Bullet pool is too small");
                 return false;
             }
         }
@@ -351,16 +379,16 @@ const CONSTANTS = {
 
 const utilities = {
     checkBoundsLowerX: (x: number) => {
-        return (x > CONSTANTS.PLAYER_BOX_SIZE);
+        return (x >= CONSTANTS.PLAYER_BOX_SIZE);
     },
     checkBoundsLowerY: (y: number) => {
-        return (y + CONSTANTS.PLAYER_BOX_SIZE < CONSTANTS.MAP_HEIGHT);
+        return (y + CONSTANTS.PLAYER_BOX_SIZE <= CONSTANTS.MAP_HEIGHT);
     },
     checkBoundsUpperX: (x: number) => {
-        return (x + CONSTANTS.PLAYER_BOX_SIZE < CONSTANTS.MAP_WIDTH);
+        return (x + CONSTANTS.PLAYER_BOX_SIZE <= CONSTANTS.MAP_WIDTH);
     },
     checkBoundsUpperY: (y: number) => {
-        return (y > CONSTANTS.PLAYER_BOX_SIZE);
+        return (y >= CONSTANTS.PLAYER_BOX_SIZE);
     },
 
     /**
@@ -378,7 +406,10 @@ const utilities = {
     wallCollision: (position: any, onWallHitCallback: any) => {
         if (!utilities.checkMapBounds(position.x, position.y)) {
             onWallHitCallback();
+            return true;
         }
+
+        return false;
     },
 
     // (Called once per frame, not per robot update)
@@ -391,7 +422,11 @@ const utilities = {
             if (typeof onRobotHitCallback !== "undefined") {
                 onRobotHitCallback();
             }
+
+            return true;
         }
+
+        return false;
     },
 
     /**
@@ -401,15 +436,17 @@ const utilities = {
      * @param {Object} enemyInstance
      */
     checkForHits(playerInstance: any, enemyInstance: any, onBulletHitCallback: any, onHitSuccessCallback: any) {
-        playerInstance.bulletPool.forEach((bullet: IBullet) => {
+        playerInstance.getActiveBullets().forEach((bullet: IBullet) => {
             if (bullet.isAlive) {
                 if (bullet.x >= enemyInstance.x - CONSTANTS.PLAYER_HALF_WIDTH &&
                     bullet.y >= enemyInstance.y - CONSTANTS.PLAYER_HALF_HEIGHT &&
                     bullet.x <= enemyInstance.x + CONSTANTS.PLAYER_HALF_WIDTH &&
                     bullet.y <= enemyInstance.y + CONSTANTS.PLAYER_HALF_HEIGHT) {
                     bullet.isAlive = false;
+
+                    // Register dealt damage
                     const damageAmount = enemyInstance.applyDamage(CONSTANTS.BULLET_DAMAGE);
-                    playerInstance.tracker.registerDamageDone(damageAmount);
+                    playerInstance.getTracker().registerDamageDone(damageAmount);
 
                     // Pass info event of enemy being hit
                     // Should be wrapped inside try / catch
@@ -439,6 +476,7 @@ const utilities = {
         if (callMap[functionKey] === true) {
             return true;
         }
+
         callMap[functionKey] = true;
         return false;
     },
@@ -466,16 +504,15 @@ const utilities = {
             }
             return undefined;
         } catch (err) {
-            console.log(err);
             return undefined;
         }
     },
 
     registerRoundWin(playerOne: any, playerTwo: any) {
-        if (playerOne.health > playerTwo.health) {
-            playerOne.tracker.registerRoundWon();
-        } else if (playerOne.health < playerTwo.health) {
-            playerTwo.tracker.registerRoundWon();
+        if (playerOne.getObjectState().health > playerTwo.getObjectState().health) {
+            playerOne.getTracker().registerRoundWon();
+        } else if (playerOne.getObjectState().health < playerTwo.getObjectState().health) {
+            playerTwo.getTracker().registerRoundWon();
         }
 
         // Otherwise: draw. Match round count is still incremented,
@@ -488,9 +525,9 @@ const utilities = {
      * @param {Object} playerTwo Second player
      */
     getGameWinner(playerOne: any, playerTwo: any) {
-        if (playerOne.tracker.roundsWon > playerTwo.tracker.roundsWon) {
+        if (playerOne.getTracker().roundsWon > playerTwo.getTracker().roundsWon) {
             return playerOne.playerName;
-        } else if (playerOne.tracker.roundsWon < playerTwo.tracker.roundsWon) {
+        } else if (playerOne.getTracker().roundsWon < playerTwo.getTracker().roundsWon) {
             return playerTwo.playerName;
         } else {
             return -1;
@@ -503,24 +540,21 @@ const utilities = {
      * @param {Object} enemy
      */
     insideFOV(player: any, enemy: any) {
-        if (!player.scanEnabled) {
-            return;
-        }
-
         const turretDirection = new Vector(Math.cos(player.turretRotation + player.rotation), Math.sin(player.turretRotation + player.rotation));
         const targetPosition = new Vector(enemy.x, enemy.y);
         const turretDirectionNormalized = turretDirection.normalize();
         const turretToTarget = targetPosition.subtract(new Vector(player.x, player.y)).normalize();
         const angleDeg = Math.acos(turretDirectionNormalized.dot(turretToTarget)) * (180 / Math.PI);
-        player.scanEnabled = false;
 
         // Update target data if it's in robot's FOV range
         if (angleDeg <= CONSTANTS.FOV) {
             player.setEnemyDistance(enemy.getPosition());
-        } else {
-            // Update target visibility so scanner could return that target is not in range
-            player.enemyVisible = false;
+            return true;
         }
+
+        // Update target visibility so scanner could return that target is not in range
+        player.enemyVisible = false;
+        return false;
     },
 };
 

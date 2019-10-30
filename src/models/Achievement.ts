@@ -16,7 +16,7 @@ const AchievementSchema = new Schema({
         type: mongoose.Schema.Types.String,
     },
     key: {
-        maxlength: 25,
+        maxlength: 50,
         required: true,
         type: mongoose.Schema.Types.String,
     },

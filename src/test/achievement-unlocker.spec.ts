@@ -1,10 +1,10 @@
 import assert from "assert";
-import { AchievementUnlocker, RULE_CONDITIONS, RuleSet } from "../game-api/achievements";
+import { AchievementUnlocker, RULE_CONDITIONS, RuleSet, updateUserAchievements, filterAchievements, calculateUnlockedExp } from "../game-api/achievements";
 
 const achievementUnlocker = new AchievementUnlocker(RuleSet);
 
 describe("AchievementUnlocker", () => {
-    describe("#unlock", () => {
+    describe("#unlock()", () => {
         it("should return false if achievement key is not in rule set", () => {
             assert.strictEqual(achievementUnlocker.unlock("ACH_NO_SUCH_KEY", 0), false);
         });
@@ -39,10 +39,13 @@ describe("AchievementUnlocker", () => {
 
         it("should return true with ACH_NO_GAME_DAMAGE rule key and value of 0", () => {
             assert.strictEqual(achievementUnlocker.unlock("ACH_NO_GAME_DAMAGE", 0), true);
+            filterAchievements("userKey", 1, 1, undefined);
+            // tslint:disable-next-line: no-empty
+            calculateUnlockedExp([], () => {});
         });
     });
 
-    describe("#compare", () => {
+    describe("#compare()", () => {
         it("should return true if both number values are equal and given condition is EQUAL", () => {
             assert.strictEqual(achievementUnlocker.compare(5, 5, RULE_CONDITIONS.EQUAL), true);
         });
@@ -65,6 +68,10 @@ describe("AchievementUnlocker", () => {
 
         it("should return true left value is less than right value and given condition is LESS_THAN", () => {
             assert.strictEqual(achievementUnlocker.compare(45, 105, RULE_CONDITIONS.LESS_THAN), true);
+        });
+
+        it("should return true because comparison type is invalid", () => {
+            assert.strictEqual(achievementUnlocker.compare(45, 105, -1), false);
         });
     });
 });

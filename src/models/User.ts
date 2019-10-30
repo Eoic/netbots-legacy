@@ -77,7 +77,7 @@ UserSchema.pre("save", function(next) {
     return bcrypt.hash(user.password, SALT_ROUNDS).then((hash) => {
         user.password = hash;
         next();
-    }).catch((err) => next(err));
+    });
 });
 
 /**

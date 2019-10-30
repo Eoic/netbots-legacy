@@ -1,7 +1,7 @@
 import { Achievement } from "../models/Achievement";
 import { User } from "../models/User";
 
-interface IRule {
+export interface IRule {
     condition: number;
     key: string;
     type: number;
@@ -18,7 +18,7 @@ const RULE_CONDITIONS = {
     EQUAL: 4,
 };
 
-const ACHIEVEMENT_TYPE = {
+export const ACHIEVEMENT_TYPE = {
     WIN: 0,
     PLAY: 1,
     DAMAGE: 2,
@@ -111,6 +111,7 @@ class AchievementUnlocker {
 }
 
 function updateUserAchievements(userId: string) {
+    /*
     const unlocker = new AchievementUnlocker(RuleSet as any);
     const unlockedList: any = [];
 
@@ -133,9 +134,11 @@ function updateUserAchievements(userId: string) {
             }).exec();
         });
     });
+    */
 }
 
 function filterAchievements(user: any, achievementType: any, statisticsValue: any, unlocker: any) {
+    /*
     const unlockedList: any = [];
 
     RuleSet.filter((rule) => rule.type === achievementType).forEach((rule) => {
@@ -147,10 +150,12 @@ function filterAchievements(user: any, achievementType: any, statisticsValue: an
     });
 
     return unlockedList;
+    */
 }
 
 // Calculates collected experience points from given list of unlocked achievements
 function calculateUnlockedExp(unlockedList: any, callback: any) {
+    /*
     let unlockedExp = 0;
     const keys: any = [];
 
@@ -164,6 +169,7 @@ function calculateUnlockedExp(unlockedList: any, callback: any) {
         achievements.forEach((item: any) => unlockedExp += item.expValue);
         callback(unlockedExp);
     });
+    */
 }
 
 export {
@@ -171,4 +177,6 @@ export {
     RULE_CONDITIONS,
     RuleSet,
     updateUserAchievements,
+    filterAchievements,
+    calculateUnlockedExp,
 };
