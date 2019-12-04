@@ -14,7 +14,7 @@ class Vector {
         this.y = y;
     }
 
-    public dot(vector: Vector) {
+    public dot(vector: Vector): number {
         return this.x * vector.x + this.y * vector.y;
     }
 

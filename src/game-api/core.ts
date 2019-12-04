@@ -511,8 +511,6 @@ export const wsServerCallback = (ws: any, req: any) => {
                     });
                 }
                 break;
-            default:
-                return 0;
         }
     });
 
