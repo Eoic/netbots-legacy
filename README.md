@@ -3,6 +3,8 @@
 [![codecov](https://codecov.io/gh/Eoic/netbots/branch/master/graph/badge.svg?token=HVrvHZV71t)](https://codecov.io/gh/Eoic/netbots)
 # NETBOTS - multiplayer robot programming game
 
+Note: this repository was recreated from older repository which had 150 commits.
+
 ### NPM scripts
 
 `start` - starts production server <br>
